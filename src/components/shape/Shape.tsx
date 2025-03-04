@@ -52,7 +52,10 @@ const Shape = (props: Props) => {
         <Rect x={0} y={0} width={width} height={height} stroke={"black"} />
         <Text
           x={5}
-          y={width / 2}
+          y={5}
+          wrap="char"
+          width={width - 10}
+          height={height - 10}
           fontSize={textStyles.fontSize}
           fontStyle={textStyles.fontWeight}
           text={value}
