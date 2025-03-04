@@ -3,11 +3,17 @@ canvas {
 }
 textarea {
   margin: 5px;
-  height: 90px;
-  width: 90px;
-  
+  height: 95px;
+  width: 95px;
+  padding: 0;
+  background-color: inherit;
+  text-overflow: "";
+
+  line-height: 1;
+  font-family: Arial, Helvetica, sans-serif;
+
   border: none;
-    overflow: auto;
+    overflow: hidden;
     outline: none;
 
     -webkit-box-shadow: none;

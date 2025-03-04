@@ -53,14 +53,14 @@ const Shape = (props: Props) => {
         <Text
           x={5}
           y={5}
-          wrap="char"
-          width={width - 10}
-          height={height - 10}
+          wrap="word"
+          width={width - 5}
+          height={height - 5}
           fontSize={textStyles.fontSize}
           fontStyle={textStyles.fontWeight}
-          text={value}
+          text={isEditing ? "" : value}
           fill={textStyles.fill}
-          align="center"
+          lineHeight={1}
         />
         <Html>
           <Popover
@@ -70,14 +70,6 @@ const Shape = (props: Props) => {
             arrow={false}
             content={
               <>
-                {/* <div className="label">text:</div> */}
-                {/* <Input
-                  ref={inputRef}
-                  autoFocus={true}
-                  size="large"
-                  value={value}
-                  onChange={(e) => setValue(e.currentTarget.value)}
-                /> */}
                 <div className="label">Font weight:</div>
                 <Select
                   defaultValue={textStyles.fontWeight}
@@ -119,16 +111,18 @@ const Shape = (props: Props) => {
               </>
             }
           >
-            <textarea
-              style={{
-                fontSize: textStyles.fontSize,
-                fontWeight: textStyles.fontWeight,
-                color: textStyles.fill,
-              }}
-              onClick={() => setEditId(id)}
-              value={value}
-              onChange={(e) => setValue(e.currentTarget.value)}
-            />
+            {isEditing && (
+              <textarea
+                style={{
+                  fontSize: textStyles.fontSize,
+                  fontWeight: textStyles.fontWeight,
+                  color: textStyles.fill,
+                }}
+                onClick={() => setEditId(id)}
+                value={value}
+                onChange={(e) => setValue(e.currentTarget.value)}
+              />
+            )}
           </Popover>
         </Html>
       </Group>
