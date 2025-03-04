@@ -54,8 +54,8 @@ const Shape = (props: Props) => {
           x={5}
           y={5}
           wrap="word"
-          width={width - 5}
-          height={height - 5}
+          width={width - 10}
+          height={height - 10}
           fontSize={textStyles.fontSize}
           fontStyle={textStyles.fontWeight}
           text={isEditing ? "" : value}
