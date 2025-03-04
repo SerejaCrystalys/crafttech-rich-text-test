@@ -1,5 +1,5 @@
-import { ColorPicker, Input, Popover, Select, Slider } from "antd";
-import { useState } from "react";
+import { ColorPicker, Input, InputRef, Popover, Select, Slider } from "antd";
+import { useEffect, useRef, useState } from "react";
 import { Group, Rect, Text } from "react-konva";
 import { Html } from "react-konva-utils";
 import { Figure } from "../canvas/Canvas";
@@ -18,6 +18,8 @@ interface Props extends Figure {
 }
 
 const Shape = (props: Props) => {
+  const inputRef = useRef<InputRef>(null);
+
   const { id, x, y, width, height, tool, drag, setEditId, isEditing } = props;
   const [value, setValue] = useState("");
   const [textStyles, setTextStyles] = useState<TextStyles>({
@@ -25,6 +27,10 @@ const Shape = (props: Props) => {
     fontSize: 20,
     fill: "#000",
   });
+
+  useEffect(() => {
+    if (inputRef.current) inputRef.current.focus();
+  }, [inputRef, isEditing]);
 
   const handleClick = () => {
     if (tool === "shape") return;
@@ -63,6 +69,8 @@ const Shape = (props: Props) => {
               <>
                 <div className="label">text:</div>
                 <Input
+                  ref={inputRef}
+                  autoFocus={true}
                   size="large"
                   value={value}
                   onChange={(e) => setValue(e.currentTarget.value)}
