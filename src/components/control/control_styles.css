@@ -1,0 +1,33 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  height: 80px;
+  width: fit-content;
+  padding: 10px 15px;
+
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+.tool {
+  cursor: pointer;
+  height: 50px;
+  width: 50px;
+  padding: 5px;
+  position: relative;
+
+  &:hover {
+    background-color: #E9EDFF;
+    border-radius: 5px;
+  }
+}
+

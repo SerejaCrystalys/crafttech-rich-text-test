@@ -1,33 +1,46 @@
-const Control = ({ tool, setTool }: any) => {
-  const handleOnChange = (e: any) => {
-    setTool(e.target.value);
+import React from "react";
+import "./control_styles.css";
+
+type Tool = {
+  name: string;
+  alt: string;
+};
+const tools: Tool[] = [
+  { name: "cursor", alt: "Взаимодействие" },
+  { name: "shape", alt: "Добавление" },
+];
+
+interface Props {
+  setTool: React.Dispatch<React.SetStateAction<string>>;
+  tool: string;
+}
+
+const Control = ({ setTool, tool }: Props) => {
+  const handleOnChange = (value: string) => {
+    setTool(value);
   };
 
   return (
-    <div style={{ position: "absolute", top: 0 }}>
-      <div>
-        <input
-          type="radio"
-          id="cursor"
-          name="control"
-          value="cursor"
-          checked={tool === "cursor"}
-          onChange={handleOnChange}
-        />
-        <label htmlFor="cursor">Взаимодействие</label>
-      </div>
-
-      <div>
-        <input
-          type="radio"
-          id="shape"
-          name="control"
-          value="shape"
-          checked={tool === "shape"}
-          onChange={handleOnChange}
-        />
-        <label htmlFor="shape">Добавление</label>
-      </div>
+    <div className="container">
+      {tools.map((item: Tool, index: number) => {
+        return (
+          <img
+            style={
+              tool === item.name
+                ? {
+                    backgroundColor: "#E9EDFF",
+                    borderRadius: "5px",
+                  }
+                : {}
+            }
+            className="tool"
+            key={index}
+            src={`/img/${item.name}.svg`}
+            alt={item.alt}
+            onClick={() => handleOnChange(item.name)}
+          />
+        );
+      })}
     </div>
   );
 };

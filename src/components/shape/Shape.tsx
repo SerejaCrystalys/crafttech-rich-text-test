@@ -1,75 +1,115 @@
-import html2canvas from "html2canvas";
-import Konva from "konva";
-import { useEffect, useRef, useState } from "react";
-import { Group, Rect } from "react-konva";
+import { ColorPicker, Input, Popover, Select, Slider } from "antd";
+import { useState } from "react";
+import { Group, Rect, Text } from "react-konva";
 import { Html } from "react-konva-utils";
-import HtmlText from "../htmlText/HtmlText";
+import { Figure } from "../canvas/Canvas";
 
-const Shape = (props: any) => {
-  const { x, y, width, height, tool, html, id, text } = props;
-  const [isEditing, setIsEditing] = useState(false);
-  const [value, setValue] = useState(text);
+type TextStyles = {
+  fontWeight?: string;
+  fontSize?: number;
+  fill?: string;
+};
 
-  const groupRef = useRef<any>(null);
-  const imageRef = useRef<any>(null);
-  const htmlRef = useRef<any>(null);
-  const renderImage = async () => {
-    const htmltext = document.getElementById(`htmltext_${id}`);
-    if (htmltext) {
-      const innerhtml = htmltext.innerHTML;
-      if (innerhtml) {
-        const canvas = await html2canvas(htmltext, {
-          backgroundColor: "rgba(0,0,0,0)",
-        });
-        const shape = new Konva.Image({
-          x: 0,
-          y: height / 2,
-          scaleX: 1 / window.devicePixelRatio,
-          scaleY: 1 / window.devicePixelRatio,
-          image: canvas,
-        });
-        groupRef.current.add(shape);
-        imageRef.current = shape;
-      } else return;
-    } else return;
-  };
+interface Props extends Figure {
+  drag: boolean;
+  tool: string;
+  setEditId: (value: string) => void;
+  isEditing: boolean;
+}
 
-  useEffect(() => {
-    renderImage();
-  }, []);
+const Shape = (props: Props) => {
+  const { id, x, y, width, height, tool, drag, setEditId, isEditing } = props;
+  const [value, setValue] = useState("");
+  const [textStyles, setTextStyles] = useState<TextStyles>({
+    fontWeight: "normal",
+    fontSize: 20,
+    fill: "#000",
+  });
 
   const handleClick = () => {
-    if (tool === "shape") {
-      return;
-    } else {
-      setIsEditing((prev) => !prev);
-      if (imageRef.current) {
-        if (isEditing) {
-          imageRef.current.show();
-        } else {
-          imageRef.current.hide();
-        }
-      } else return;
-    }
+    if (tool === "shape") return;
+
+    setEditId(id);
   };
 
-  const handleInput = (e: any) => {
-    setValue(e.target.value);
+  const handleChange = (props: TextStyles) => {
+    setTextStyles({
+      fontWeight: props.fontWeight || textStyles.fontWeight,
+      fontSize: props.fontSize || textStyles.fontSize,
+      fill: props.fill || textStyles.fill,
+    });
   };
 
   return (
     <>
-      <Group x={x} y={y} onClick={handleClick} ref={groupRef} draggable>
-        <Rect stroke={"black"} width={width} height={height} />
-        {isEditing && (
-          <Html>
-            <textarea value={value} onChange={handleInput} />
-          </Html>
-        )}
+      <Group x={x} y={y} onClick={handleClick} draggable>
+        <Rect x={0} y={0} width={width} height={height} stroke={"black"} />
+        <Text
+          x={5}
+          y={width / 2}
+          fontSize={textStyles.fontSize}
+          fontStyle={textStyles.fontWeight}
+          text={value}
+          fill={textStyles.fill}
+          align="center"
+        />
+        <Html>
+          <Popover
+            align={{ offset: [width, height + 10] }}
+            open={isEditing && !drag}
+            placement="bottom"
+            arrow={false}
+            content={
+              <>
+                <div className="label">text:</div>
+                <Input
+                  size="large"
+                  value={value}
+                  onChange={(e) => setValue(e.currentTarget.value)}
+                />
+                <div className="label">Font weight:</div>
+                <Select
+                  defaultValue={textStyles.fontWeight}
+                  style={{ width: 120 }}
+                  onChange={(value) =>
+                    handleChange({
+                      fontWeight: value,
+                    })
+                  }
+                  size="large"
+                  options={[
+                    { value: "normal", label: "Normal" },
+                    { value: "bold", label: "Bold" },
+                  ]}
+                />
+                <div className="label">Font Size:</div>
+                <Slider
+                  min={0}
+                  max={50}
+                  onChange={(value) =>
+                    handleChange({
+                      fontSize: value,
+                    })
+                  }
+                  value={textStyles.fontSize}
+                  step={1}
+                />
+                <ColorPicker
+                  defaultValue={textStyles.fill}
+                  value={textStyles.fill}
+                  onChangeComplete={(value) =>
+                    handleChange({
+                      fill: "#" + value.toHex(),
+                    })
+                  }
+                  size="large"
+                  showText
+                />
+              </>
+            }
+          ></Popover>
+        </Html>
       </Group>
-      <Html>
-        <HtmlText ref={htmlRef} html={html} id={id} />
-      </Html>
     </>
   );
 };
