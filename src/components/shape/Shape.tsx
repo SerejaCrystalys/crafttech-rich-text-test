@@ -1,4 +1,4 @@
-import { ColorPicker, Input, InputRef, Popover, Select, Slider } from "antd";
+import { ColorPicker, InputRef, Popover, Select, Slider } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { Group, Rect, Text } from "react-konva";
 import { Html } from "react-konva-utils";
@@ -64,20 +64,20 @@ const Shape = (props: Props) => {
         />
         <Html>
           <Popover
-            align={{ offset: [width, height + 10] }}
+            align={{ offset: [0, 10] }}
             open={isEditing && !drag}
             placement="bottom"
             arrow={false}
             content={
               <>
-                <div className="label">text:</div>
-                <Input
+                {/* <div className="label">text:</div> */}
+                {/* <Input
                   ref={inputRef}
                   autoFocus={true}
                   size="large"
                   value={value}
                   onChange={(e) => setValue(e.currentTarget.value)}
-                />
+                /> */}
                 <div className="label">Font weight:</div>
                 <Select
                   defaultValue={textStyles.fontWeight}
@@ -118,7 +118,18 @@ const Shape = (props: Props) => {
                 />
               </>
             }
-          ></Popover>
+          >
+            <textarea
+              style={{
+                fontSize: textStyles.fontSize,
+                fontWeight: textStyles.fontWeight,
+                color: textStyles.fill,
+              }}
+              onClick={() => setEditId(id)}
+              value={value}
+              onChange={(e) => setValue(e.currentTarget.value)}
+            />
+          </Popover>
         </Html>
       </Group>
     </>
