@@ -5,11 +5,11 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000,
+    port: 3010,
     // allowedHosts: ['*']
   },
   preview: {
-    port: 3000,
-    allowedHosts: ['guzlik.ru']
+    port: 3010,
+    allowedHosts: ['test.guzlik.ru']
   },
 })
