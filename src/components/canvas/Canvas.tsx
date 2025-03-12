@@ -14,7 +14,7 @@ const Canvas = ({ tool, stageRef }: Props) => {
   const { figuresMap, editId, editFigures, setEditId } = useFigures();
   const [isDrag, setDrag] = useState<boolean>(false);
 
-  const handleOnClick = (e: KonvaEventObject<MouseEvent, Node<NodeConfig>>) => {
+  const handleClick = (e: KonvaEventObject<MouseEvent, Node<NodeConfig>>) => {
     if (!Object.getPrototypeOf(e.target).className) {
       setEditId("");
     }
@@ -25,8 +25,6 @@ const Canvas = ({ tool, stageRef }: Props) => {
     const stage = e.target.getStage();
     const stageOffset = stage?.absolutePosition();
     const point = stage?.getPointerPosition();
-
-    console.log("jopa");
 
     editFigures(Date.now().toString(36), {
       width: 100,
@@ -55,7 +53,7 @@ const Canvas = ({ tool, stageRef }: Props) => {
       draggable={tool === "cursor"}
       onDragStart={() => setDrag(true)}
       onDragEnd={() => setDrag(false)}
-      onClick={handleOnClick}
+      onClick={handleClick}
       ref={stageRef}
     >
       <Layer>

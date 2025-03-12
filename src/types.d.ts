@@ -11,13 +11,6 @@ export type Figure = {
   rotation: number;
 
   text: TextStyles;
-
-  // : {
-  //   value: string;
-  //   fontSize: number;
-  //   fontWeight: "normal" | "bold";
-  //   color: string;
-  // } ;
 };
 
 export type TextStyles = {
@@ -30,22 +23,3 @@ export type TextStyles = {
 export type FigureMap = {
   [id: string]: Figure | undefined;
 };
-
-// export type FigureStyles = {
-//   height: number;
-//   width: number;
-//   stroke: string;
-//   fill: string;
-// };
-
-// export type Point = {
-//   x: number;
-//   y: number;
-// };
-
-// export type DefaultConfig = {
-//   tl: Point;
-//   tr: Point;
-//   bl: Point;
-//   br: Point;
-// };

@@ -25,7 +25,6 @@ const EditMenu = ({ id, isEditing, drag }: Props) => {
   };
 
   const onInput = (e: FormEvent<HTMLTextAreaElement>) => {
-    // setValue(e.currentTarget.value);
     editFigures(id, {
       ...figuresMap[id]!,
       text: {

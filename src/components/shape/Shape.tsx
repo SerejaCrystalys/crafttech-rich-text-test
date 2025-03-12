@@ -28,14 +28,13 @@ const Shape = ({
   drag,
   isEditing,
 }: Props) => {
-  const { figuresMap, editId, editFigures, setEditId, deleteFigure } =
-    useFigures();
-
-  const findItem = figuresMap[id];
-
   const inputRef = useRef<InputRef>(null);
   const rectRef = useRef<Konva.Group>(null);
   const trRef = useRef<Konva.Transformer>(null);
+
+  const { figuresMap, editId, editFigures, setEditId, deleteFigure } =
+    useFigures();
+  const findItem = figuresMap[id];
 
   useEffect(() => {
     if (inputRef.current) inputRef.current.focus();
@@ -73,7 +72,7 @@ const Shape = ({
     });
   };
 
-  const transformHandle = (evt: Konva.KonvaEventObject<MouseEvent>) => {
+  const onTransformEnd = (evt: Konva.KonvaEventObject<MouseEvent>) => {
     const { x, y, scaleX, scaleY, rotation } = evt.currentTarget.attrs;
     editFigures(id, {
       ...figuresMap[id]!,
@@ -110,7 +109,7 @@ const Shape = ({
         onClick={handleClick}
         draggable
         onDragEnd={onDragEnd}
-        onTransformEnd={transformHandle}
+        onTransformEnd={onTransformEnd}
       >
         <Rect x={0} y={0} width={width} height={height} stroke={"black"} />
         <Text
