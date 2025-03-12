@@ -11,10 +11,7 @@ interface Props {
 }
 
 const Canvas = ({ tool, stageRef }: Props) => {
-  // const { editFigures, figureMap, setEditId, editId } = useContext(ctx);
-
   const { figuresMap, editId, editFigures, setEditId } = useFigures();
-
   const [isDrag, setDrag] = useState<boolean>(false);
 
   const handleOnClick = (e: KonvaEventObject<MouseEvent, Node<NodeConfig>>) => {
@@ -29,12 +26,25 @@ const Canvas = ({ tool, stageRef }: Props) => {
     const stageOffset = stage?.absolutePosition();
     const point = stage?.getPointerPosition();
 
+    console.log("jopa");
+
     editFigures(Date.now().toString(36), {
       width: 100,
       height: 100,
       type: "rect",
+
       x: point!.x - stageOffset!.x,
       y: point!.y - stageOffset!.y,
+      scaleX: 1,
+      scaleY: 1,
+      rotation: 0,
+
+      text: {
+        value: "",
+        fontSize: 20,
+        fontWeight: "normal",
+        color: "#000",
+      },
     });
   };
 
@@ -51,17 +61,18 @@ const Canvas = ({ tool, stageRef }: Props) => {
       <Layer>
         {Object.keys(figuresMap).map((id: string, index: number) => {
           const figure = figuresMap[id];
-          return (
-            <Shape
-              drag={isDrag}
-              key={index}
-              id={id}
-              isEditing={id === editId}
-              setEditId={setEditId}
-              {...figure}
-              tool={tool}
-            />
-          );
+          if (figure)
+            return (
+              <Shape
+                drag={isDrag}
+                key={index}
+                id={id}
+                isEditing={id === editId}
+                setEditId={setEditId}
+                {...figure}
+                tool={tool}
+              />
+            );
         })}
       </Layer>
     </Stage>
