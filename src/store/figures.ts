@@ -33,7 +33,6 @@ const useFigures = create<Store>((set) => ({
     set((state) => {
       const clone = structuredClone(state.figuresMap);
       delete clone[id];
-      console.log(clone, id, "delete");
       localStorage.setItem("figures", JSON.stringify(clone));
       return {
         figuresMap: clone,

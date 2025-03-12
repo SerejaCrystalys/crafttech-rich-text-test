@@ -1,11 +1,11 @@
 import { InputRef } from "antd";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Group, Rect, Text, Transformer } from "react-konva";
 import Konva from "konva";
 
 import { Figure } from "../../types";
 import useFigures from "../../store/figures";
-import EditMenu from "./menu";
+import EditMenu from "./menu/container";
 
 interface Props extends Figure {
   id: string;
@@ -31,6 +31,8 @@ const Shape = ({
   const inputRef = useRef<InputRef>(null);
   const rectRef = useRef<Konva.Group>(null);
   const trRef = useRef<Konva.Transformer>(null);
+
+  const [isTr, setTr] = useState<boolean>(false);
 
   const { figuresMap, editId, editFigures, setEditId, deleteFigure } =
     useFigures();
@@ -73,6 +75,7 @@ const Shape = ({
   };
 
   const onTransformEnd = (evt: Konva.KonvaEventObject<MouseEvent>) => {
+    setTr(false);
     const { x, y, scaleX, scaleY, rotation } = evt.currentTarget.attrs;
     editFigures(id, {
       ...figuresMap[id]!,
@@ -110,8 +113,19 @@ const Shape = ({
         draggable
         onDragEnd={onDragEnd}
         onTransformEnd={onTransformEnd}
+        onTransformStart={() => setTr(true)}
       >
-        <Rect x={0} y={0} width={width} height={height} stroke={"black"} />
+        <Rect
+          x={0}
+          y={0}
+          width={width}
+          height={height}
+          stroke={findItem.shape.strokeColor}
+          strokeEnabled={findItem.shape.strokeEnable}
+          strokeWidth={findItem.shape.strokeWidth}
+          fillAfterStrokeEnabled
+          fill={findItem.shape.fill}
+        />
         <Text
           x={5}
           y={5}
@@ -124,7 +138,7 @@ const Shape = ({
           fill={findItem.text.color}
           lineHeight={1}
         />
-        <EditMenu id={id} drag={drag} isEditing={isEditing} />
+        <EditMenu id={id} drag={drag} isEditing={isEditing} isTr={isTr} />
       </Group>
     </>
   );

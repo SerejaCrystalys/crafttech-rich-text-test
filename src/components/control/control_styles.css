@@ -18,6 +18,17 @@
   border-radius: 5px;
 }
 
+.popovered{ 
+  position: unset;
+  height: 30px;
+  padding: 0;
+  transform: none;
+  border: none;
+
+}
+
+
+
 .tool {
   cursor: pointer;
   height: 50px;
@@ -29,5 +40,10 @@
     background-color: #E9EDFF;
     border-radius: 5px;
   }
+}
+
+.small {
+  height: 30px;
+  width: 30px;
 }
 

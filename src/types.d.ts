@@ -11,6 +11,7 @@ export type Figure = {
   rotation: number;
 
   text: TextStyles;
+  shape: ShapeStyles;
 };
 
 export type TextStyles = {
@@ -18,6 +19,13 @@ export type TextStyles = {
   fontWeight?: string;
   fontSize?: number;
   color?: string;
+};
+
+export type ShapeStyles = {
+  fill?: string;
+  strokeEnable?: boolean;
+  strokeColor?: string;
+  strokeWidth?: number;
 };
 
 export type FigureMap = {

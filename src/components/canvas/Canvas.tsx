@@ -43,6 +43,12 @@ const Canvas = ({ tool, stageRef }: Props) => {
         fontWeight: "normal",
         color: "#000",
       },
+      shape: {
+        fill: "#fff",
+        strokeColor: "#000",
+        strokeEnable: true,
+        strokeWidth: 5,
+      },
     });
   };
 
