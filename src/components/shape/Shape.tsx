@@ -1,8 +1,10 @@
 import { ColorPicker, InputRef, Popover, Select, Slider } from "antd";
 import { useEffect, useRef, useState } from "react";
-import { Group, Rect, Text } from "react-konva";
+import { Group, Rect, Text, Transformer } from "react-konva";
 import { Html } from "react-konva-utils";
-import { Figure } from "../canvas/Canvas";
+import Konva from "konva";
+import { Figure } from "../../types";
+import useFigures from "../../store/figures";
 
 type TextStyles = {
   fontWeight?: string;
@@ -11,6 +13,7 @@ type TextStyles = {
 };
 
 interface Props extends Figure {
+  id: string;
   drag: boolean;
   tool: string;
   setEditId: (value: string) => void;
@@ -18,9 +21,14 @@ interface Props extends Figure {
 }
 
 const Shape = (props: Props) => {
-  const inputRef = useRef<InputRef>(null);
+  const { id, x, y, width, height, tool, drag, isEditing } = props;
 
-  const { id, x, y, width, height, tool, drag, setEditId, isEditing } = props;
+  const { figuresMap, editFigures, setEditId } = useFigures();
+
+  const inputRef = useRef<InputRef>(null);
+  const rectRef = useRef<Konva.Group>(null);
+  const trRef = useRef<Konva.Transformer>(null);
+
   const [value, setValue] = useState("");
   const [textStyles, setTextStyles] = useState<TextStyles>({
     fontWeight: "normal",
@@ -34,9 +42,15 @@ const Shape = (props: Props) => {
 
   const handleClick = () => {
     if (tool === "shape") return;
-
     setEditId(id);
   };
+
+  useEffect(() => {
+    if (isEditing && trRef.current && rectRef.current) {
+      trRef.current.nodes([rectRef.current]);
+      trRef.current.getLayer()?.batchDraw();
+    }
+  }, [isEditing]);
 
   const handleChange = (props: TextStyles) => {
     setTextStyles({
@@ -46,9 +60,33 @@ const Shape = (props: Props) => {
     });
   };
 
+  const onDragEnd = (evt: Konva.KonvaEventObject<MouseEvent>) => {
+    editFigures(id, {
+      ...figuresMap[id],
+      x: evt.target.x(),
+      y: evt.target.y(),
+    });
+  };
+
   return (
     <>
-      <Group x={x} y={y} onClick={handleClick} draggable>
+      <Transformer
+        ref={trRef}
+        enabledAnchors={[
+          "top-left",
+          "top-right",
+          "bottom-left",
+          "bottom-right",
+        ]}
+      />
+      <Group
+        ref={rectRef}
+        x={x}
+        y={y}
+        onClick={handleClick}
+        draggable
+        onDragEnd={onDragEnd}
+      >
         <Rect x={0} y={0} width={width} height={height} stroke={"black"} />
         <Text
           x={5}

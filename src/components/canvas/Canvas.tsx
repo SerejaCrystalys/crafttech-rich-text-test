@@ -3,26 +3,19 @@ import { Layer, Stage } from "react-konva";
 import { KonvaEventObject, Node, NodeConfig } from "konva/lib/Node";
 import { Stage as StageType } from "konva/lib/Stage";
 import Shape from "../shape/Shape";
+import useFigures from "../../store/figures";
 
 interface Props {
   tool: string;
   stageRef: MutableRefObject<StageType | null>;
 }
 
-export type Figure = {
-  id: string;
-  width: number;
-  height: number;
-  type: string;
-  x: number;
-  y: number;
-};
-
 const Canvas = ({ tool, stageRef }: Props) => {
-  const [figures, setFigures] = useState<Figure[]>([]);
+  // const { editFigures, figureMap, setEditId, editId } = useContext(ctx);
+
+  const { figuresMap, editId, editFigures, setEditId } = useFigures();
 
   const [isDrag, setDrag] = useState<boolean>(false);
-  const [editId, setEditId] = useState<string>("");
 
   const handleOnClick = (e: KonvaEventObject<MouseEvent, Node<NodeConfig>>) => {
     if (!Object.getPrototypeOf(e.target).className) {
@@ -36,17 +29,13 @@ const Canvas = ({ tool, stageRef }: Props) => {
     const stageOffset = stage?.absolutePosition();
     const point = stage?.getPointerPosition();
 
-    setFigures((prev: Figure[]) => [
-      ...prev,
-      {
-        id: Date.now().toString(36),
-        width: 100,
-        height: 100,
-        type: "rect",
-        x: point!.x - stageOffset!.x,
-        y: point!.y - stageOffset!.y,
-      },
-    ]);
+    editFigures(Date.now().toString(36), {
+      width: 100,
+      height: 100,
+      type: "rect",
+      x: point!.x - stageOffset!.x,
+      y: point!.y - stageOffset!.y,
+    });
   };
 
   return (
@@ -60,12 +49,14 @@ const Canvas = ({ tool, stageRef }: Props) => {
       ref={stageRef}
     >
       <Layer>
-        {figures.map((figure: Figure, i: number) => {
+        {Object.keys(figuresMap).map((id: string, index: number) => {
+          const figure = figuresMap[id];
           return (
             <Shape
               drag={isDrag}
-              key={i}
-              isEditing={figure.id === editId}
+              key={index}
+              id={id}
+              isEditing={id === editId}
               setEditId={setEditId}
               {...figure}
               tool={tool}
